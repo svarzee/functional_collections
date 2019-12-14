@@ -1,0 +1,8 @@
+name: withers_extension
+version: 0.0.0
+author: svarzee <svarzee@gmail.com>
+homepage: https://github.com/svarzee/functional_collections
+description: >-
+  Immutable collections for functional programming.
+environment:
+  sdk: '>=2.3.0 <3.0.0'
