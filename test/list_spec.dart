@@ -26,4 +26,13 @@ void main() {
     expect(FList.from([1, 2]).map((item) => item.toString()).dartList(),
         equals(["1", "2"]));
   });
+
+  test('FList.flatMap should map list', () {
+    expect(
+        FList.from([
+          FList.from([1, 2]),
+          FList.from([3, 4])
+        ]).flatMap((item) => item).dartList(),
+        equals([1, 2, 3, 4]));
+  });
 }
