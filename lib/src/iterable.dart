@@ -32,5 +32,12 @@ mixin FIterable<T> {
     return accumulator;
   }
 
+  FOption<T> reduce(T combine(T lhs, T rhs)) {
+    FOption<T> accumulator = FNone();
+    this.forEach((item) => accumulator =
+        accumulator.map((value) => combine(value, item)).orElse(item));
+    return accumulator;
+  }
+
   FIterable<R> map<R>(R mapper(T value));
 }
