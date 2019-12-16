@@ -6,6 +6,20 @@ mixin FIterable<T> {
     }
   }
 
+  bool exists(bool predicate(T item)) {
+    final it = iterator();
+    while (it.moveNext()) {
+      if (predicate(it.current)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool forAll(bool predicate(T item)) {
+    return !exists((item) => !predicate(item));
+  }
+
   Iterator<T> iterator();
 
   R fold<R>(R initialValue, R combine(R accumulator, T item)) {
