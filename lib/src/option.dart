@@ -1,7 +1,6 @@
-import 'package:functional_collections/src/sized.dart';
-
 import 'iterable.dart';
-import 'ordered_iterable.dart';
+import 'ordered.dart';
+import 'sized.dart';
 
 abstract class FOption<T> with FIterable<T>, FOrdered<T>, FSized<T> {
   T get();
