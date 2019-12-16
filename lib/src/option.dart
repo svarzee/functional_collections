@@ -37,29 +37,23 @@ class FSome<T> extends FOption<T> {
   int get hashCode => _value.hashCode;
 
   @override
-  T get() {
-    return _value;
-  }
+  T get() => _value;
 
   @override
-  FSome<R> map<R>(R Function(T value) mapper) {
-    return FSome(mapper(_value));
-  }
+  FSome<R> map<R>(R Function(T value) mapper) => FSome(mapper(_value));
 
   @override
-  FOption<R> flatMap<R>(FOption<R> Function(T value) mapper) {
-    return mapper(_value);
-  }
+  FOption<R> flatMap<R>(FOption<R> Function(T value) mapper) => mapper(_value);
 
   @override
-  int size() {
-    return 1;
-  }
+  int size() => 1;
 
   @override
-  T getOrElse(T value) {
-    return _value;
-  }
+  T getOrElse(T value) => _value;
+
+  @override
+  FOption<T> filter(bool Function(T item) predicate) =>
+      predicate(_value) ? this : FNone<T>();
 }
 
 class FNone<T> extends FOption<T> {
@@ -74,29 +68,22 @@ class FNone<T> extends FOption<T> {
   int get hashCode => 0;
 
   @override
-  T get() {
-    throw FNoValuePresentError();
-  }
+  T get() => throw FNoValuePresentError();
 
   @override
-  FOption<R> map<R>(R Function(T value) mapper) {
-    return FNone();
-  }
+  FOption<R> map<R>(R Function(T value) mapper) => FNone<R>();
 
   @override
-  FOption<R> flatMap<R>(FOption<R> Function(T value) mapper) {
-    return FNone();
-  }
+  FOption<R> flatMap<R>(FOption<R> Function(T value) mapper) => FNone<R>();
 
   @override
-  int size() {
-    return 0;
-  }
+  int size() => 0;
 
   @override
-  T getOrElse(T value) {
-    return value;
-  }
+  T getOrElse(T value) => value;
+
+  @override
+  FOption<T> filter(bool Function(T item) predicate) => FNone<T>();
 }
 
 class _FOptionIterator<T> extends Iterator<T> {

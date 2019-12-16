@@ -15,7 +15,7 @@ abstract class FList<T> with FIterable<T>, FOrdered<T>, FSized<T> {
 
   FList<T> append(T item);
 
-  FList<T> prepend(item) => _Cons(item, this, this.size() + 1);
+  FList<T> prepend(T item) => _Cons(item, this, this.size() + 1);
 
   FList<T> tail();
 
@@ -39,16 +39,19 @@ class _Nil<T> extends FList<T> {
   _Nil() : super._();
 
   @override
-  FList<T> append(item) => FList.of(item);
+  FList<T> append(T item) => FList.of(item);
 
   @override
   int size() => 0;
 
   @override
-  FNone<T> headOption() => FNone();
+  FNone<T> headOption() => FNone<T>();
 
   @override
   FList<T> tail() => _Nil<T>();
+
+  @override
+  FIterable<T> filter(bool Function(T item) predicate) => _Nil<T>();
 }
 
 class _Cons<T> extends FList<T> {
@@ -59,7 +62,7 @@ class _Cons<T> extends FList<T> {
   _Cons(this._head, this._tail, this._size) : super._();
 
   @override
-  FList<T> append(item) =>
+  FList<T> append(T item) =>
       this.foldRight(FList.of(item), (item, acc) => acc.prepend(item));
 
   @override
@@ -76,6 +79,10 @@ class _Cons<T> extends FList<T> {
   FList<T> tail() {
     return _tail;
   }
+
+  @override
+  FList<T> filter(bool Function(T item) predicate) => this.foldRight(
+      FList<T>(), (item, acc) => predicate(item) ? acc.prepend(item) : acc);
 }
 
 class _FListIterator<T> extends Iterator<T> {

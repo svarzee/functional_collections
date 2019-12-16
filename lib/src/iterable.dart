@@ -8,6 +8,8 @@ mixin FIterable<T> {
     }
   }
 
+  FIterable<T> filter(bool predicate(T item));
+
   FOption<T> find(bool predicate(T item)) {
     final it = iterator();
     while (it.moveNext()) {
