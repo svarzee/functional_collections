@@ -33,6 +33,9 @@ abstract class FList<T> with FIterable<T>, FOrdered<T>, FSized<T> {
 
   @override
   Iterator<T> iterator() => _FListIterator<T>(this);
+
+  @override
+  FList<R> map<R>(R mapper(T value));
 }
 
 class _Nil<T> extends FList<T> {
