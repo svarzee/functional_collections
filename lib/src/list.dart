@@ -6,7 +6,12 @@ import 'sized.dart';
 abstract class FList<T> with FIterable, FOrdered, FSized {
   FList._();
 
-  factory FList() => _Nil();
+  factory FList() => _Nil<T>();
+
+  factory FList.from(Iterable<T> iterable) =>
+      iterable.fold(FList<T>(), (acc, item) => acc.prepend(item)).reverse();
+
+  factory FList.of(T item) => _Cons(item, _Nil(), 1);
 
   FList<T> append(T item);
 
@@ -15,7 +20,7 @@ abstract class FList<T> with FIterable, FOrdered, FSized {
   FList<T> tail();
 
   List<T> dartList() {
-    final dartList = [];
+    final dartList = List<T>();
     this.forEach(dartList.add);
     return dartList;
   }
@@ -34,25 +39,16 @@ class _Nil<T> extends FList<T> {
   _Nil() : super._();
 
   @override
-  FList<T> append(item) {
-    // TODO: implement append
-    return null;
-  }
+  FList<T> append(item) => FList.of(item);
 
   @override
-  int size() {
-    return 0;
-  }
+  int size() => 0;
 
   @override
-  FNone<T> headOption() {
-    return FNone();
-  }
+  FNone<T> headOption() => FNone();
 
   @override
-  FList<T> tail() {
-    return _Nil<T>();
-  }
+  FList<T> tail() => _Nil<T>();
 }
 
 class _Cons<T> extends FList<T> {
@@ -63,10 +59,8 @@ class _Cons<T> extends FList<T> {
   _Cons(this._head, this._tail, this._size) : super._();
 
   @override
-  FList<T> append(item) {
-    // TODO: implement prepend
-    return null;
-  }
+  FList<T> append(item) =>
+      this.foldRight(FList.of(item), (item, acc) => acc.prepend(item));
 
   @override
   int size() {

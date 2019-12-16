@@ -1,5 +1,5 @@
-import 'package:test/test.dart';
 import 'package:functional_collections/src/list.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('FList.isEmpty for empty', () {
@@ -11,6 +11,14 @@ void main() {
   });
 
   test('FList.prepend constructs expected list', () {
-    expect(FList().prepend(1).prepend(2).dartList(), equals([2, 1]));
+    expect(FList().prepend(2).prepend(1).dartList(), equals([1, 2]));
+  });
+
+  test('FList.append constructs expected list', () {
+    expect(FList().append(1).append(2).dartList(), equals([1, 2]));
+  });
+
+  test('FList.from constructs expected list from iterable', () {
+    expect(FList.from([1, 2]).dartList(), equals([1, 2]));
   });
 }
