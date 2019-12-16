@@ -1,3 +1,5 @@
+import 'package:functional_collections/src/option.dart';
+
 mixin FIterable<T> {
   void forEach(void action(T item)) {
     final it = iterator();
@@ -6,19 +8,19 @@ mixin FIterable<T> {
     }
   }
 
-  bool exists(bool predicate(T item)) {
+  FOption<T> find(bool predicate(T item)) {
     final it = iterator();
     while (it.moveNext()) {
       if (predicate(it.current)) {
-        return true;
+        return FSome(it.current);
       }
     }
-    return false;
+    return FNone();
   }
 
-  bool forAll(bool predicate(T item)) {
-    return !exists((item) => !predicate(item));
-  }
+  bool exists(bool predicate(T item)) => find(predicate).isNonEmpty();
+
+  bool forAll(bool predicate(T item)) => !exists((item) => !predicate(item));
 
   Iterator<T> iterator();
 
