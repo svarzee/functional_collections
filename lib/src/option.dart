@@ -3,11 +3,12 @@ import 'package:functional_collections/src/sized.dart';
 import 'iterable.dart';
 import 'ordered_iterable.dart';
 
-abstract class FOption<T> with FIterable, FOrdered, FSized {
+abstract class FOption<T> with FIterable<T>, FOrdered<T>, FSized<T> {
   T get();
 
   T getOrElse(T value);
 
+  @override
   FOption<R> map<R>(R mapper(T value));
 
   FOption<R> flatMap<R>(FOption<R> mapper(T value));
@@ -15,10 +16,10 @@ abstract class FOption<T> with FIterable, FOrdered, FSized {
   FOption<T> headOption() => this;
 
   @override
-  Iterator iterator() => _FOptionIterator(this);
+  Iterator<T> iterator() => _FOptionIterator(this);
 
   @override
-  FOrdered reverse() => this;
+  FOption<T> reverse() => this;
 }
 
 class FSome<T> extends FOption<T> {
@@ -40,10 +41,10 @@ class FSome<T> extends FOption<T> {
   T get() => _value;
 
   @override
-  FSome<R> map<R>(R Function(T value) mapper) => FSome(mapper(_value));
+  FOption<R> map<R>(R Function(T value) mapper) => FSome(mapper(_value));
 
   @override
-  FOption<R> flatMap<R>(FOption<R> Function(T value) mapper) => mapper(_value);
+  FOption<R> flatMap<R>(FOption<R> mapper(T value)) => mapper(_value);
 
   @override
   int size() => 1;
@@ -71,7 +72,7 @@ class FNone<T> extends FOption<T> {
   T get() => throw FNoValuePresentError();
 
   @override
-  FOption<R> map<R>(R Function(T value) mapper) => FNone<R>();
+  FOption<R> map<R>(R mapper(T value)) => FNone<R>();
 
   @override
   FOption<R> flatMap<R>(FOption<R> Function(T value) mapper) => FNone<R>();
@@ -83,7 +84,7 @@ class FNone<T> extends FOption<T> {
   T getOrElse(T value) => value;
 
   @override
-  FOption<T> filter(bool Function(T item) predicate) => FNone<T>();
+  FOption<T> filter(bool predicate(T item)) => FNone<T>();
 }
 
 class _FOptionIterator<T> extends Iterator<T> {

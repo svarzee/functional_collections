@@ -31,4 +31,6 @@ mixin FIterable<T> {
     this.forEach((item) => accumulator = combine(accumulator, item));
     return accumulator;
   }
+
+  FIterable<R> map<R>(R mapper(T value));
 }

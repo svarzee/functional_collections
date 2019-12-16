@@ -52,6 +52,9 @@ class _Nil<T> extends FList<T> {
 
   @override
   FIterable<T> filter(bool Function(T item) predicate) => _Nil<T>();
+
+  @override
+  FList<R> map<R>(R mapper(T value)) => _Nil<R>();
 }
 
 class _Cons<T> extends FList<T> {
@@ -83,6 +86,10 @@ class _Cons<T> extends FList<T> {
   @override
   FList<T> filter(bool Function(T item) predicate) => this.foldRight(
       FList<T>(), (item, acc) => predicate(item) ? acc.prepend(item) : acc);
+
+  @override
+  FList<R> map<R>(R mapper(T value)) =>
+      this.foldRight(FList<R>(), (item, acc) => acc.prepend(mapper(item)));
 }
 
 class _FListIterator<T> extends Iterator<T> {
