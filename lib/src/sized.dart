@@ -1,4 +1,4 @@
-abstract class FSized {
+abstract class FSized<T> {
   int size();
 
   bool isEmpty() => size() == 0;

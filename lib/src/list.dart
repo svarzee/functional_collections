@@ -3,7 +3,7 @@ import 'option.dart';
 import 'ordered_iterable.dart';
 import 'sized.dart';
 
-abstract class FList<T> with FIterable, FOrdered, FSized {
+abstract class FList<T> with FIterable<T>, FOrdered<T>, FSized<T> {
   FList._();
 
   factory FList() => _Nil<T>();
