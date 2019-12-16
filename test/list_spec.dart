@@ -21,4 +21,9 @@ void main() {
   test('FList.from constructs expected list from iterable', () {
     expect(FList.from([1, 2]).dartList(), equals([1, 2]));
   });
+
+  test('FList.map should map list', () {
+    expect(FList.from([1, 2]).map((item) => item.toString()).dartList(),
+        equals(["1", "2"]));
+  });
 }
