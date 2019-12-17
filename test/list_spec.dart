@@ -35,4 +35,8 @@ void main() {
         ]).flatMap((item) => item).dartList(),
         equals([1, 2, 3, 4]));
   });
+
+  test('FList.reverse should reverse list', () {
+    expect(FList.from([1, 2]).reverse().dartList(), equals([2, 1]));
+  });
 }
