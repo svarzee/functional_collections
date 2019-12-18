@@ -30,6 +30,8 @@ abstract class FList<T> with FIterable<T>, FOrdered<T>, FSized<T> {
     return dartList;
   }
 
+  T head() => headOption().get();
+
   FOption<T> headOption();
 
   FList<R> flatMap<R>(FOrdered<R> mapper(T value)) => this
