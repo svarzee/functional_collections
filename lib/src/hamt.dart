@@ -155,8 +155,13 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
     if (_exists(bit, mask)) {
       final index = _index(mask, prefix);
       final updatedNode = array[index]._remove(shift + _PREFIX_SIZE, key);
-      final updatedArray = List.of(array)..[index] = updatedNode;
-      return _CompressedNode(mask, updatedArray);
+      if (updatedNode is _EmptyLeaf<K, V>) {
+        final updatedArray = List.of(array)..removeAt(index);
+        return _CompressedNode(mask ^ bit, updatedArray);
+      } else {
+        final updatedArray = List.of(array)..[index] = updatedNode;
+        return _CompressedNode(mask, updatedArray);
+      }
     } else {
       return this;
     }
