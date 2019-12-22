@@ -14,8 +14,18 @@ void main() {
     expect(FList().prepend(2).prepend(1).dartList(), equals([1, 2]));
   });
 
+  test('FList.prependAll constructs expected list', () {
+    expect(FList.from([3, 4]).prependAll(FList.from([1, 2])).dartList(),
+        equals([1, 2, 3, 4]));
+  });
+
   test('FList.append constructs expected list', () {
     expect(FList().append(1).append(2).dartList(), equals([1, 2]));
+  });
+
+  test('FList.appendAll constructs expected list', () {
+    expect(FList.from([1, 2]).appendAll(FList.from([3, 4])).dartList(),
+        equals([1, 2, 3, 4]));
   });
 
   test('FList.from constructs expected list from iterable', () {

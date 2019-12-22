@@ -22,6 +22,9 @@ abstract class FList<T> with FIterable<T>, FOrdered<T>, FSized<T> {
 
   FList<T> prepend(T item) => _Cons(item, this, this.size() + 1);
 
+  FList<T> prependAll(FOrdered<T> items) =>
+      items.reverse().foldLeft(this, (acc, item) => acc.prepend(item));
+
   FList<T> tail();
 
   List<T> dartList() {
