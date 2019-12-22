@@ -67,6 +67,32 @@ class AddBenchmark extends BenchmarkBase {
   }
 }
 
+class AddAllBenchmark extends BenchmarkBase {
+  AddAllBenchmark(bool functional, this.N)
+      : this.functional = functional,
+        super((functional ? "functional" : "dart") + " add all");
+
+  final bool functional;
+
+  List<int> values;
+  int N;
+
+  @override
+  void setup() {
+    final random = Random(0);
+    values = List<int>.generate(N, (idx) => random.nextInt(1 << 32));
+  }
+
+  @override
+  void run() {
+    if (functional) {
+      Hamt().addAll(values.map((val) => KeyVal(val, val)).toList());
+    } else {
+      Set().addAll(values);
+    }
+  }
+}
+
 class RemoveBenchmark extends BenchmarkBase {
   RemoveBenchmark(bool functional, bool copy, this.N)
       : this.functional = functional,
@@ -111,6 +137,9 @@ main() {
   AddBenchmark(false, false, 10000).report();
   AddBenchmark(false, true, 10000).report();
   AddBenchmark(true, false, 10000).report();
+
+  AddAllBenchmark(false, 10000).report();
+  AddAllBenchmark(true, 10000).report();
 
   RemoveBenchmark(false, false, 10000).report();
   RemoveBenchmark(false, true, 10000).report();
