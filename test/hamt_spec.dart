@@ -14,14 +14,48 @@ void main() {
     expect(Hamt().add("some", "value").contains("some"), isTrue);
   });
 
+  test('Keys that are added to hamt with addAll should be contained', () {
+    var hamt = Hamt().addAll([KeyVal("key1", "val1"), KeyVal("key2", "val2")]);
+    expect(hamt.contains("key1") && hamt.contains("key2"), isTrue);
+  });
+
+  test(
+      'Keys that are added to hamt with addAll and removed should not be contained',
+      () {
+    var hamt = Hamt().addAll(
+        [KeyVal("key1", "val1"), KeyVal("key2", "val2")]).remove("key1");
+    expect(!hamt.contains("key1") && hamt.contains("key2"), isTrue);
+  });
+
+  test(
+      'Duplicate keys that are added to hamt with addAll and removed should not be contained',
+      () {
+    var hamt = Hamt().addAll([
+      KeyVal("key1", "val1"),
+      KeyVal("key1", "val1"),
+      KeyVal("key2", "val2")
+    ]).remove("key1");
+    expect(!hamt.contains("key1") && hamt.contains("key2"), isTrue);
+  });
+
   test('Value that is added to hamt should be contained', () {
     expect(Hamt<String, String>().add("some", "value").get("some"),
         FSome("value"));
   });
 
-  test('Key that is added and remove should not be contained', () {
+  test('Key that is added and removed should not be contained', () {
     expect(
         Hamt().add("some", "value").remove("some").contains("some"), isFalse);
+  });
+
+  test('Key that is added twice and removed should not be contained', () {
+    expect(
+        Hamt()
+            .add("some", "value")
+            .add("some", "value")
+            .remove("some")
+            .contains("some"),
+        isFalse);
   });
 
   test('For two values added with the same key, the later should be contained.',
