@@ -29,6 +29,8 @@ abstract class Hamt<K, V> {
 
   Hamt<K, V> add(K key, V val) => _add(0, key, val);
 
+  Hamt<K, V> addAll(List<KeyVal<K, V>> keyVals) => _addAll(0, keyVals);
+
   Hamt<K, V> remove(K key) => _remove(0, key);
 
   bool contains(K key) => _contains(0, key);
@@ -37,50 +39,13 @@ abstract class Hamt<K, V> {
 
   Hamt<K, V> _add(int shift, K key, V val);
 
+  Hamt<K, V> _addAll(int shift, List<KeyVal<K, V>> keyVals);
+
   Hamt<K, V> _remove(int shift, K key);
 
   bool _contains(int shift, K key);
 
   FOption<V> _get(int shift, K key);
-}
-
-class _ArrayNode<K, V> extends Hamt<K, V> {
-  final List<Hamt<K, V>> array;
-
-  _ArrayNode(this.array) : super._();
-
-  factory _ArrayNode.ofKeyVals(int shift, FList<KeyVal<K, V>> keyVals) {
-    final List<Hamt<K, V>> newArray = List.filled(_ARRAY_SIZE, _EmptyLeaf());
-    keyVals.forEach((keyVal) {
-      K key = keyVal.key;
-      V val = keyVal.val;
-      int prefix = _prefix(keyVal.key.hashCode, shift);
-      return newArray
-        ..setRange(prefix, prefix + 1,
-            [newArray[prefix]._add(shift + _PREFIX_SIZE, key, val)]);
-    });
-    return _ArrayNode(newArray);
-  }
-
-  Hamt<K, V> _add(int shift, K key, V val) {
-    final prefix = _prefix(key.hashCode, shift);
-    return _ArrayNode(List.of(array)
-      ..setRange(prefix, prefix + 1,
-          [array[prefix]._add(shift + _PREFIX_SIZE, key, val)]));
-  }
-
-  Hamt<K, V> _remove(int shift, K key) {
-    final prefix = _prefix(key.hashCode, shift);
-    return _ArrayNode(List.of(array)
-      ..setRange(prefix, prefix + 1,
-          [array[prefix]._remove(shift + _PREFIX_SIZE, key)]));
-  }
-
-  bool _contains(int shift, K key) =>
-      array[_prefix(key.hashCode, shift)]._contains(shift + _PREFIX_SIZE, key);
-
-  FOption<V> _get(int shift, K key) =>
-      array[_prefix(key.hashCode, shift)]._get(shift, key);
 }
 
 class _CompressedNode<K, V> extends Hamt<K, V> {
@@ -149,6 +114,31 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
     }
   }
 
+  @override
+  Hamt<K, V> _addAll(int shift, List<KeyVal<K, V>> keyVals) {
+    if (keyVals.isEmpty) {
+      return this;
+    } else {
+      int mask = this.mask;
+      List<Hamt<K, V>> array = List.of(this.array);
+      keyVals.forEach((keyVal) {
+        final hash = keyVal.key.hashCode;
+        final prefix = _prefix(hash, shift);
+        var bit = _bit(prefix);
+        if (!_exists(bit, mask)) {
+          mask |= bit;
+          array.insert(
+              _index(mask, prefix), _SingleLeaf(hash, keyVal.key, keyVal.val));
+        } else {
+          var index = _index(mask, prefix);
+          array[index] =
+              array[index]._add(shift + _PREFIX_SIZE, keyVal.key, keyVal.val);
+        }
+      });
+      return _CompressedNode(mask, array);
+    }
+  }
+
   Hamt<K, V> _remove(int shift, K key) {
     final prefix = _prefix(key.hashCode, shift);
     final bit = _bit(prefix);
@@ -201,6 +191,26 @@ class _EmptyLeaf<K, V> extends Hamt<K, V> {
   bool _contains(int shift, K key) => false;
 
   FOption<V> _get(int shift, K key) => FNone();
+
+  @override
+  Hamt<K, V> _addAll(int shift, List<KeyVal<K, V>> keyVals) {
+    if (keyVals.isEmpty) {
+      return this;
+    } else if (keyVals.length == 1) {
+      var key = keyVals[0].key;
+      var val = keyVals[0].val;
+      return _SingleLeaf(key.hashCode, key, val);
+    } else if (keyVals
+        .every((keyVal) => keyVal.key.hashCode == keyVals[0].key.hashCode)) {
+      final dedupKeyVals = Set<KeyVal<K, V>>.from(keyVals).toList();
+      int hash = keyVals[0].key.hashCode;
+      return dedupKeyVals.length > 1
+          ? _Leaf(hash, FList())._addAll(shift, dedupKeyVals)
+          : _SingleLeaf(hash, dedupKeyVals.first.key, dedupKeyVals.first.val);
+    } else {
+      return _CompressedNode(0, [])._addAll(shift, keyVals);
+    }
+  }
 }
 
 class _SingleLeaf<K, V> extends Hamt<K, V> {
@@ -230,6 +240,22 @@ class _SingleLeaf<K, V> extends Hamt<K, V> {
 
   FOption<V> _get(int shift, K key) =>
       key.hashCode == this.hash && key == this.key ? FSome(this.val) : FNone();
+
+  @override
+  Hamt<K, V> _addAll(int shift, List<KeyVal<K, V>> keyVals) {
+    if (keyVals.isEmpty) {
+      return this;
+    } else if (keyVals.every((keyVal) => keyVal.key.hashCode == this.hash)) {
+      final dedupKeyVals =
+          (Set<KeyVal<K, V>>.from(keyVals)..add(KeyVal(key, val))).toList();
+      return dedupKeyVals.length > 1
+          ? _Leaf(hash, FList())._addAll(shift, dedupKeyVals)
+          : this;
+    } else {
+      return _CompressedNode(0, [])
+          ._addAll(shift, keyVals..add(KeyVal(key, val)));
+    }
+  }
 }
 
 class _Leaf<K, V> extends Hamt<K, V> {
@@ -259,6 +285,21 @@ class _Leaf<K, V> extends Hamt<K, V> {
 
   FOption<V> _get(int shift, K key) =>
       keyVals.find((keyVal) => keyVal.key == key).map((keyVal) => keyVal.val);
+
+  @override
+  Hamt<K, V> _addAll(int shift, List<KeyVal<K, V>> keyVals) {
+    if (keyVals.isEmpty) {
+      return this;
+    } else if (keyVals.every((keyVal) => keyVal.key.hashCode == this.hash)) {
+      final dedupKeyVals = (Set<KeyVal<K, V>>.from(keyVals)
+            ..addAll(this.keyVals.dartList()))
+          .toList();
+      return _Leaf(hash, FList.from(dedupKeyVals));
+    } else {
+      return _CompressedNode(0, [])
+          ._addAll(shift, keyVals..addAll(this.keyVals.dartList()));
+    }
+  }
 }
 
 class KeyVal<K, V> {
