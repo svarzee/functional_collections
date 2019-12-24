@@ -2,7 +2,8 @@ import 'iterable.dart';
 import 'ordered.dart';
 import 'sized.dart';
 
-abstract class FOption<T> with FIterable<T>, FOrdered<T>, FSized<T> {
+abstract class FOption<T> extends Iterable<T>
+    with FIterable<T>, FOrdered<T>, FSized<T> {
   factory FOption.ofNullable(T val) => val == null ? FNone() : FSome(val);
 
   FOption._();
@@ -21,7 +22,7 @@ abstract class FOption<T> with FIterable<T>, FOrdered<T>, FSized<T> {
   FOption<T> headOption() => this;
 
   @override
-  Iterator<T> iterator() => _FOptionIterator(this);
+  Iterator<T> get iterator => _FOptionIterator(this);
 
   @override
   FOption<T> reverse() => this;
@@ -52,7 +53,7 @@ class FSome<T> extends FOption<T> {
   FOption<R> flatMap<R>(FOption<R> mapper(T value)) => mapper(_value);
 
   @override
-  int size() => 1;
+  int get size => 1;
 
   @override
   T getOrElse(T value) => _value;
@@ -91,7 +92,7 @@ class FNone<T> extends FOption<T> {
   FOption<R> flatMap<R>(FOption<R> Function(T value) mapper) => FNone<R>();
 
   @override
-  int size() => 0;
+  int get size => 0;
 
   @override
   T getOrElse(T value) => value;
@@ -121,7 +122,7 @@ class _FOptionIterator<T> extends Iterator<T> {
   bool moveNext() {
     _current = _option;
     _option = FNone();
-    return _current.isNonEmpty();
+    return _current.isNotEmpty;
   }
 }
 

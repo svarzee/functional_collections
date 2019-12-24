@@ -1,7 +1,9 @@
-abstract class FSized<T> {
-  int size();
+import 'package:functional_collections/src/iterable.dart';
 
-  bool isEmpty() => size() == 0;
+mixin FSized<T> on FIterable<T> {
+  int get size;
 
-  bool isNonEmpty() => !isEmpty();
+  bool get isEmpty => size == 0;
+
+  bool get isNonEmpty => !isEmpty;
 }

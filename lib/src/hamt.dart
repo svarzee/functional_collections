@@ -55,7 +55,7 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
   _CompressedNode(this.mask, this.array) : super._();
 
   factory _CompressedNode.ofKeyVals(int shift, FList<KeyVal<K, V>> keyVals) {
-    List<Hamt<K, V>> array = List(keyVals.size());
+    List<Hamt<K, V>> array = List(keyVals.size);
     int mask = keyVals.foldLeft(
         0, (mask, keyVal) => mask | _bit(_prefix(keyVal.key.hashCode, shift)));
     int progressMask = 0;
@@ -202,10 +202,10 @@ class _EmptyLeaf<K, V> extends Hamt<K, V> {
       return _SingleLeaf(key.hashCode, key, val);
     } else if (keyVals
         .every((keyVal) => keyVal.key.hashCode == keyVals.first.key.hashCode)) {
-      final dedupKeyVals = Set<KeyVal<K, V>>.from(keyVals).toList();
+      final dedupKeyVals = Set<KeyVal<K, V>>.from(keyVals);
       int hash = keyVals.first.key.hashCode;
       return dedupKeyVals.length > 1
-          ? _Leaf(hash, FList())._addAll(shift, dedupKeyVals)
+          ? _Leaf(hash, FList.from(dedupKeyVals))
           : _SingleLeaf(hash, dedupKeyVals.first.key, dedupKeyVals.first.val);
     } else {
       return _CompressedNode(0, [])._addAll(shift, keyVals);
@@ -247,9 +247,9 @@ class _SingleLeaf<K, V> extends Hamt<K, V> {
       return this;
     } else if (keyVals.every((keyVal) => keyVal.key.hashCode == this.hash)) {
       final dedupKeyVals =
-          (Set<KeyVal<K, V>>.from(keyVals)..add(KeyVal(key, val))).toList();
+          (Set<KeyVal<K, V>>.from(keyVals)..add(KeyVal(key, val)));
       return dedupKeyVals.length > 1
-          ? _Leaf(hash, FList())._addAll(shift, dedupKeyVals)
+          ? _Leaf(hash, FList.from(dedupKeyVals))
           : this;
     } else {
       return _CompressedNode(0, [])
@@ -275,13 +275,13 @@ class _Leaf<K, V> extends Hamt<K, V> {
 
   Hamt<K, V> _remove(int shift, K key) {
     final updatedKeyVals = keyVals.filter((keyVal) => keyVal.key != key);
-    return updatedKeyVals.size() == 1
+    return updatedKeyVals.size == 1
         ? _SingleLeaf.of(keyVals.head().key, keyVals.head().val)
         : _Leaf(hash, updatedKeyVals);
   }
 
   bool _contains(int shift, K key) =>
-      keyVals.exists((keyVal) => keyVal.key == key);
+      keyVals.any((keyVal) => keyVal.key == key);
 
   FOption<V> _get(int shift, K key) =>
       keyVals.find((keyVal) => keyVal.key == key).map((keyVal) => keyVal.val);
@@ -291,13 +291,12 @@ class _Leaf<K, V> extends Hamt<K, V> {
     if (keyVals.isEmpty) {
       return this;
     } else if (keyVals.every((keyVal) => keyVal.key.hashCode == this.hash)) {
-      final dedupKeyVals = (Set<KeyVal<K, V>>.from(keyVals)
-            ..addAll(this.keyVals.dartList()))
-          .toList();
+      final dedupKeyVals =
+          (Set<KeyVal<K, V>>.from(keyVals)..addAll(this.keyVals));
       return _Leaf(hash, FList.from(dedupKeyVals));
     } else {
       return _CompressedNode(0, [])
-          ._addAll(shift, keyVals..addAll(this.keyVals.dartList()));
+          ._addAll(shift, keyVals..addAll(this.keyVals));
     }
   }
 }
