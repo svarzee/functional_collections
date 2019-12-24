@@ -3,6 +3,10 @@ import 'ordered.dart';
 import 'sized.dart';
 
 abstract class FOption<T> with FIterable<T>, FOrdered<T>, FSized<T> {
+  factory FOption.ofNullable(T val) => val == null ? FNone() : FSome(val);
+
+  FOption._();
+
   T get();
 
   T getOrElse(T value);
@@ -26,7 +30,7 @@ abstract class FOption<T> with FIterable<T>, FOrdered<T>, FSized<T> {
 class FSome<T> extends FOption<T> {
   final T _value;
 
-  FSome(this._value);
+  FSome(this._value) : super._();
 
   @override
   bool operator ==(Object other) =>
@@ -62,7 +66,7 @@ class FSome<T> extends FOption<T> {
 }
 
 class FNone<T> extends FOption<T> {
-  FNone();
+  FNone() : super._();
 
   @override
   bool operator ==(Object other) =>
