@@ -63,6 +63,11 @@ class FSome<T> extends FOption<T> {
 
   @override
   FOption<T> orElse(T value) => this;
+
+  @override
+  String toString() {
+    return 'FSome{_value: $_value}';
+  }
 }
 
 class FNone<T> extends FOption<T> {
@@ -96,6 +101,11 @@ class FNone<T> extends FOption<T> {
 
   @override
   FOption<T> orElse(T value) => FSome(value);
+
+  @override
+  String toString() {
+    return 'FNone{}';
+  }
 }
 
 class _FOptionIterator<T> extends Iterator<T> {
