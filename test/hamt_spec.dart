@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:functional_collections/src/hamt.dart';
 import 'package:functional_collections/src/option.dart';
+import 'package:functional_collections/src/tuple.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -15,7 +16,7 @@ void main() {
   });
 
   test('Keys that are added to hamt with addAll should be contained', () {
-    var hamt = Hamt().addAll([KeyVal("key1", "val1"), KeyVal("key2", "val2")]);
+    var hamt = Hamt().addAll([Tuple2("key1", "val1"), Tuple2("key2", "val2")]);
     expect(hamt.contains("key1") && hamt.contains("key2"), isTrue);
   });
 
@@ -23,7 +24,7 @@ void main() {
       'Keys that are added to hamt with addAll and removed should not be contained',
       () {
     var hamt = Hamt().addAll(
-        [KeyVal("key1", "val1"), KeyVal("key2", "val2")]).remove("key1");
+        [Tuple2("key1", "val1"), Tuple2("key2", "val2")]).remove("key1");
     expect(!hamt.contains("key1") && hamt.contains("key2"), isTrue);
   });
 
@@ -31,9 +32,9 @@ void main() {
       'Duplicate keys that are added to hamt with addAll and removed should not be contained',
       () {
     var hamt = Hamt().addAll([
-      KeyVal("key1", "val1"),
-      KeyVal("key1", "val1"),
-      KeyVal("key2", "val2")
+      Tuple2("key1", "val1"),
+      Tuple2("key1", "val1"),
+      Tuple2("key2", "val2")
     ]).remove("key1");
     expect(!hamt.contains("key1") && hamt.contains("key2"), isTrue);
   });

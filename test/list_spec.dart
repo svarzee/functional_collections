@@ -11,7 +11,7 @@ void main() {
   });
 
   test('FList.prepend constructs expected list', () {
-    expect(FList().prepend(2).prepend(1).dartList(), equals([1, 2]));
+    expect(FList()..prepend(2).prepend(1).dartList(), equals([1, 2]));
   });
 
   test('FList.prependAll constructs expected list', () {
@@ -48,5 +48,15 @@ void main() {
 
   test('FList.reverse should reverse list', () {
     expect(FList.from([1, 2]).reverse().dartList(), equals([2, 1]));
+  });
+
+  test('FList.foldLeft fold list from left to right', () {
+    expect(FList.from(['a', 'b']).foldLeft('', (acc, item) => acc + item),
+        equals('ab'));
+  });
+
+  test('FList.foldRight fold list from right to left', () {
+    expect(FList.from(['a', 'b']).foldRight('', (item, acc) => acc + item),
+        equals('ba'));
   });
 }
