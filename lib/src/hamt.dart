@@ -28,6 +28,8 @@ abstract class Hamt<K, V> {
 
   factory Hamt() => _EmptyLeaf();
 
+  FList<Tuple2<K, V>> entries();
+
   Hamt<K, V> add(K key, V val) => _add(0, key, val);
 
   Hamt<K, V> addAll(List<Tuple2<K, V>> keyVals) => _addAll(0, keyVals);
@@ -180,6 +182,12 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
       return FNone();
     }
   }
+
+  @override
+  FList<Tuple2<K, V>> entries() => array.fold(
+      FList(),
+      (acc, item) =>
+          item.entries().fold(acc, (acc, item) => acc.prepend(item)));
 }
 
 class _EmptyLeaf<K, V> extends Hamt<K, V> {
@@ -213,6 +221,9 @@ class _EmptyLeaf<K, V> extends Hamt<K, V> {
       return _CompressedNode(0, [])._addAll(shift, keyVals);
     }
   }
+
+  @override
+  FList<Tuple2<K, V>> entries() => FList();
 }
 
 class _SingleLeaf<K, V> extends Hamt<K, V> {
@@ -258,6 +269,9 @@ class _SingleLeaf<K, V> extends Hamt<K, V> {
           ._addAll(shift, keyVals..add(Tuple2(key, val)));
     }
   }
+
+  @override
+  FList<Tuple2<K, V>> entries() => FList.of(Tuple2(key, val));
 }
 
 class _Leaf<K, V> extends Hamt<K, V> {
@@ -301,4 +315,7 @@ class _Leaf<K, V> extends Hamt<K, V> {
           ._addAll(shift, keyVals..addAll(this.keyVals));
     }
   }
+
+  @override
+  FList<Tuple2<K, V>> entries() => keyVals;
 }
