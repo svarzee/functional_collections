@@ -1,10 +1,8 @@
 import 'iterable.dart';
 import 'option.dart';
 import 'ordered.dart';
-import 'sized.dart';
 
-abstract class FList<T> extends Iterable<T>
-    with FIterable<T>, FOrdered<T>, FSized<T> {
+abstract class FList<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
   FList._();
 
   factory FList() => _Nil<T>();
@@ -21,7 +19,7 @@ abstract class FList<T> extends Iterable<T>
       .foldLeft(this.reverse(), (acc, item) => acc.prepend(item))
       .reverse();
 
-  FList<T> prepend(T item) => _Cons(item, this, this.size + 1);
+  FList<T> prepend(T item) => _Cons(item, this, this.length + 1);
 
   FList<T> prependAll(FOrdered<T> items) =>
       items.reverse().foldLeft(this, (acc, item) => acc.prepend(item));
@@ -47,7 +45,7 @@ abstract class FList<T> extends Iterable<T>
 
   @override
   FList<T> reverse() =>
-      size <= 1 ? this : foldLeft(FList(), (acc, item) => acc.prepend(item));
+      length <= 1 ? this : foldLeft(FList(), (acc, item) => acc.prepend(item));
 
   @override
   Iterator<T> get iterator => _FListIterator<T>(this);
@@ -65,7 +63,7 @@ class _Nil<T> extends FList<T> {
   _Nil() : super._();
 
   @override
-  int get size => 0;
+  int get length => 0;
 
   @override
   FNone<T> headOption() => FNone<T>();
@@ -82,7 +80,7 @@ class _Cons<T> extends FList<T> {
   _Cons(this._head, this._tail, this._size) : super._();
 
   @override
-  int get size => _size;
+  int get length => _size;
 
   @override
   FSome<T> headOption() {

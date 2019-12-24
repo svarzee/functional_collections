@@ -1,9 +1,7 @@
 import 'iterable.dart';
 import 'ordered.dart';
-import 'sized.dart';
 
-abstract class FOption<T> extends Iterable<T>
-    with FIterable<T>, FOrdered<T>, FSized<T> {
+abstract class FOption<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
   factory FOption.ofNullable(T val) => val == null ? FNone() : FSome(val);
 
   FOption._();
@@ -53,7 +51,7 @@ class FSome<T> extends FOption<T> {
   FOption<R> flatMap<R>(FOption<R> mapper(T value)) => mapper(_value);
 
   @override
-  int get size => 1;
+  int get length => 1;
 
   @override
   T getOrElse(T value) => _value;
@@ -92,7 +90,7 @@ class FNone<T> extends FOption<T> {
   FOption<R> flatMap<R>(FOption<R> Function(T value) mapper) => FNone<R>();
 
   @override
-  int get size => 0;
+  int get length => 0;
 
   @override
   T getOrElse(T value) => value;

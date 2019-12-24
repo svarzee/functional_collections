@@ -58,7 +58,7 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
   _CompressedNode(this.mask, this.array) : super._();
 
   factory _CompressedNode.ofKeyVals(int shift, FList<Tuple2<K, V>> keyVals) {
-    List<Hamt<K, V>> array = List(keyVals.size);
+    List<Hamt<K, V>> array = List(keyVals.length);
     int mask = keyVals.foldLeft(
         0, (mask, keyVal) => mask | _bit(_prefix(keyVal.val1.hashCode, shift)));
     int progressMask = 0;
@@ -291,7 +291,7 @@ class _Leaf<K, V> extends Hamt<K, V> {
 
   Hamt<K, V> _remove(int shift, K key) {
     final updatedKeyVals = keyVals.filter((keyVal) => keyVal.val1 != key);
-    return updatedKeyVals.size == 1
+    return updatedKeyVals.length == 1
         ? _SingleLeaf.of(keyVals.head().val1, keyVals.head().val2)
         : _Leaf(hash, updatedKeyVals);
   }
