@@ -1,3 +1,6 @@
+## 0.1.8
+* Refactor
+
 ## 0.1.7
 * Refactor
 

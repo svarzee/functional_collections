@@ -321,7 +321,7 @@ class _Leaf<K, V> extends Hamt<K, V> {
   Hamt<K, V> _addAll(int shift, List<FTuple2<K, V>> keyVals) {
     if (keyVals.isEmpty) {
       return this;
-    } else if (keyVals.every((keyVal) => keyVal.val1.hashCode == this.hash)) {
+    } else if (keyVals.every((keyVal) => keyVal.val1.hashCode == hash)) {
       final dedupKeyVals =
           (Set<FTuple2<K, V>>.from(keyVals)..addAll(this.keyVals));
       return _Leaf(hash, FList.from(dedupKeyVals));
