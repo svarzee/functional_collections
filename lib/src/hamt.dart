@@ -256,21 +256,20 @@ class _SingleLeaf<K, V> extends Hamt<K, V> {
 
   @override
   Hamt<K, V> _remove(int shift, K key) =>
-      key.hashCode == this.hash && key == this.key ? _EmptyLeaf() : this;
+      key.hashCode == hash && key == this.key ? _EmptyLeaf() : this;
 
   @override
-  bool _contains(int shift, K key) =>
-      key.hashCode == this.hash && key == this.key;
+  bool _contains(int shift, K key) => key.hashCode == hash && key == this.key;
 
   @override
   FOption<V> _get(int shift, K key) =>
-      key.hashCode == this.hash && key == this.key ? FSome(this.val) : FNone();
+      key.hashCode == hash && key == this.key ? FSome(val) : FNone();
 
   @override
   Hamt<K, V> _addAll(int shift, List<FTuple2<K, V>> keyVals) {
     if (keyVals.isEmpty) {
       return this;
-    } else if (keyVals.every((keyVal) => keyVal.val1.hashCode == this.hash)) {
+    } else if (keyVals.every((keyVal) => keyVal.val1.hashCode == hash)) {
       final dedupKeyVals =
           (Set<FTuple2<K, V>>.from(keyVals)..add(FTuple2(key, val)));
       return dedupKeyVals.length > 1
