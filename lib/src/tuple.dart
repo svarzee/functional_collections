@@ -15,10 +15,10 @@ class FTuple2<T1, T2> {
   @override
   int get hashCode => val1.hashCode ^ val2.hashCode;
 
-  FTuple2<RT1, T2> map1<RT1>(RT1 mapper(T1 value)) =>
+  FTuple2<RT1, T2> map1<RT1>(RT1 Function(T1 value) mapper) =>
       FTuple2(mapper(val1), val2);
 
-  FTuple2<T1, RT2> map2<RT2>(RT2 mapper(T2 value)) =>
+  FTuple2<T1, RT2> map2<RT2>(RT2 Function(T2 value) mapper) =>
       FTuple2(val1, mapper(val2));
 
   @override

@@ -13,9 +13,9 @@ abstract class FOption<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
   FOption<T> orElse(T value);
 
   @override
-  FOption<R> map<R>(R mapper(T value));
+  FOption<R> map<R>(R Function(T value) mapper);
 
-  FOption<R> flatMap<R>(FOption<R> mapper(T value));
+  FOption<R> flatMap<R>(FOption<R> Function(T value) mapper);
 
   @override
   FOption<T> firstOption() => this;
@@ -49,7 +49,7 @@ class FSome<T> extends FOption<T> {
   FOption<R> map<R>(R Function(T value) mapper) => FSome(mapper(_value));
 
   @override
-  FOption<R> flatMap<R>(FOption<R> mapper(T value)) => mapper(_value);
+  FOption<R> flatMap<R>(FOption<R> Function(T value) mapper) => mapper(_value);
 
   @override
   int get length => 1;
@@ -85,7 +85,7 @@ class FNone<T> extends FOption<T> {
   T get() => throw FNoValuePresentError();
 
   @override
-  FOption<R> map<R>(R mapper(T value)) => FNone<R>();
+  FOption<R> map<R>(R Function(T value) mapper) => FNone<R>();
 
   @override
   FOption<R> flatMap<R>(FOption<R> Function(T value) mapper) => FNone<R>();
@@ -97,7 +97,7 @@ class FNone<T> extends FOption<T> {
   T getOrElse(T value) => value;
 
   @override
-  FOption<T> where(bool predicate(T item)) => FNone<T>();
+  FOption<T> where(bool Function(T item) predicate) => FNone<T>();
 
   @override
   FOption<T> orElse(T value) => FSome(value);

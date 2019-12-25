@@ -197,13 +197,17 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
 class _EmptyLeaf<K, V> extends Hamt<K, V> {
   _EmptyLeaf() : super._();
 
+  @override
   Hamt<K, V> _add(int shift, K key, V val) =>
       _SingleLeaf(key.hashCode, key, val);
 
+  @override
   Hamt<K, V> _remove(int shift, K key) => this;
 
+  @override
   bool _contains(int shift, K key) => false;
 
+  @override
   FOption<V> _get(int shift, K key) => FNone();
 
   @override
@@ -217,7 +221,7 @@ class _EmptyLeaf<K, V> extends Hamt<K, V> {
     } else if (keyVals.every(
         (keyVal) => keyVal.val1.hashCode == keyVals.first.val1.hashCode)) {
       final dedupKeyVals = Set<FTuple2<K, V>>.from(keyVals);
-      int hash = keyVals.first.val1.hashCode;
+      final hash = keyVals.first.val1.hashCode;
       return dedupKeyVals.length > 1
           ? _Leaf(hash, FList.from(dedupKeyVals))
           : _SingleLeaf(hash, dedupKeyVals.first.val1, dedupKeyVals.first.val2);
@@ -239,6 +243,7 @@ class _SingleLeaf<K, V> extends Hamt<K, V> {
 
   factory _SingleLeaf.of(K key, V val) => _SingleLeaf(key.hashCode, key, val);
 
+  @override
   Hamt<K, V> _add(int shift, K key, V val) {
     if (key.hashCode == hash) {
       return _Leaf(hash,
@@ -249,12 +254,15 @@ class _SingleLeaf<K, V> extends Hamt<K, V> {
     }
   }
 
+  @override
   Hamt<K, V> _remove(int shift, K key) =>
       key.hashCode == this.hash && key == this.key ? _EmptyLeaf() : this;
 
+  @override
   bool _contains(int shift, K key) =>
       key.hashCode == this.hash && key == this.key;
 
+  @override
   FOption<V> _get(int shift, K key) =>
       key.hashCode == this.hash && key == this.key ? FSome(this.val) : FNone();
 
@@ -284,6 +292,7 @@ class _Leaf<K, V> extends Hamt<K, V> {
 
   _Leaf(this.hash, this.keyVals) : super._();
 
+  @override
   Hamt<K, V> _add(int shift, K key, V val) {
     if (key.hashCode == hash) {
       return _Leaf(hash, keyVals.prepend(FTuple2(key, val)));
@@ -293,6 +302,7 @@ class _Leaf<K, V> extends Hamt<K, V> {
     }
   }
 
+  @override
   Hamt<K, V> _remove(int shift, K key) {
     final updatedKeyVals = keyVals.where((keyVal) => keyVal.val1 != key);
     return updatedKeyVals.length == 1
@@ -300,9 +310,11 @@ class _Leaf<K, V> extends Hamt<K, V> {
         : _Leaf(hash, updatedKeyVals);
   }
 
+  @override
   bool _contains(int shift, K key) =>
       keyVals.any((keyVal) => keyVal.val1 == key);
 
+  @override
   FOption<V> _get(int shift, K key) =>
       keyVals.find((keyVal) => keyVal.val1 == key).map((keyVal) => keyVal.val2);
 

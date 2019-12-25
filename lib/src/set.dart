@@ -17,12 +17,14 @@ class FSet<T> extends Iterable<T> {
 
   FSet<T> add(T value) => FSet._(hamt.add(value, value));
 
-  FSet<T> addAll(Iterable<T> values) =>
-      FSet._(hamt.addAll(values.map((value) => FTuple2(value, value)).toList()));
+  FSet<T> addAll(Iterable<T> values) => FSet._(
+      hamt.addAll(values.map((value) => FTuple2(value, value)).toList()));
 
-  FSet<R> map<R>(R mapper(T value)) => FSet.from(super.map(mapper));
+  @override
+  FSet<R> map<R>(R Function(T value) mapper) => FSet.from(super.map(mapper));
 
-  FSet<T> where(bool test(T value)) => FSet.from(super.where(test));
+  @override
+  FSet<T> where(bool Function(T value) test) => FSet.from(super.where(test));
 
   @override
   Iterator<T> get iterator => hamt.entries().map((item) => item.val1).iterator;
