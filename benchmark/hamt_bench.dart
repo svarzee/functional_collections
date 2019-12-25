@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:math';
 
 import 'package:benchmark_harness/benchmark_harness.dart';
+import 'package:functional_collections/functional_collections.dart';
 import 'package:functional_collections/src/hamt.dart';
 
 class ContainsBenchmark extends BenchmarkBase {
@@ -86,7 +87,7 @@ class AddAllBenchmark extends BenchmarkBase {
   @override
   void run() {
     if (functional) {
-      Hamt().addAll(values.map((val) => KeyVal(val, val)).toList());
+      Hamt().addAll(values.map((val) => Tuple2(val, val)).toList());
     } else {
       Set().addAll(values);
     }
