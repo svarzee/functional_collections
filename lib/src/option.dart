@@ -17,6 +17,7 @@ abstract class FOption<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
 
   FOption<R> flatMap<R>(FOption<R> mapper(T value));
 
+  @override
   FOption<T> firstOption() => this;
 
   @override
@@ -57,7 +58,7 @@ class FSome<T> extends FOption<T> {
   T getOrElse(T value) => _value;
 
   @override
-  FOption<T> filter(bool Function(T item) predicate) =>
+  FOption<T> where(bool Function(T item) predicate) =>
       predicate(_value) ? this : FNone<T>();
 
   @override
@@ -96,7 +97,7 @@ class FNone<T> extends FOption<T> {
   T getOrElse(T value) => value;
 
   @override
-  FOption<T> filter(bool predicate(T item)) => FNone<T>();
+  FOption<T> where(bool predicate(T item)) => FNone<T>();
 
   @override
   FOption<T> orElse(T value) => FSome(value);

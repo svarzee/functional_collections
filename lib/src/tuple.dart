@@ -1,6 +1,3 @@
-import 'package:functional_collections/src/list.dart';
-import 'package:functional_collections/src/option.dart';
-
 class FTuple2<T1, T2> {
   final T1 val1;
   final T2 val2;

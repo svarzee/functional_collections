@@ -68,11 +68,11 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
       final prefix = _prefix(keyVal.val1.hashCode, shift);
       final bit = _bit(prefix);
       if (_exists(bit, progressMask)) {
-        int index = _index(mask, prefix);
+        final index = _index(mask, prefix);
         array[index] = array[index]._add(shift + _PREFIX_SIZE, key, val);
       } else {
         progressMask |= bit;
-        int index = _index(mask, prefix);
+        final index = _index(mask, prefix);
         array[index] = _SingleLeaf.of(key, val);
       }
     });
@@ -92,8 +92,8 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
       return _CompressedNode(mask,
           [_CompressedNode.ofTwo(shift + _PREFIX_SIZE, keyVal1, keyVal2)]);
     } else {
-      FTuple2<K, V> first = prefix1 > prefix2 ? keyVal2 : keyVal1;
-      FTuple2<K, V> second = prefix1 > prefix2 ? keyVal1 : keyVal2;
+      final first = prefix1 > prefix2 ? keyVal2 : keyVal1;
+      final second = prefix1 > prefix2 ? keyVal1 : keyVal2;
       return _CompressedNode(mask, [
         _SingleLeaf.of(first.val1, first.val2),
         _SingleLeaf.of(second.val1, second.val2)
@@ -101,6 +101,7 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
     }
   }
 
+  @override
   Hamt<K, V> _add(int shift, K key, V val) {
     final prefix = _prefix(key.hashCode, shift);
     final bit = _bit(prefix);
