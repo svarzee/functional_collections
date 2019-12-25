@@ -9,7 +9,7 @@ class FSet<T> extends Iterable<T> {
   FSet._(Hamt<T, T> hamt) : hamt = hamt;
 
   FSet.from(Iterable<T> keyVals)
-      : hamt = Hamt()
+      : hamt = Hamt<T, T>()
             .addAll(keyVals.map((value) => Tuple2(value, value)).toList());
 
   @override

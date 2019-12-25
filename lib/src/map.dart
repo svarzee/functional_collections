@@ -5,12 +5,12 @@ import 'package:functional_collections/src/tuple.dart';
 class FMap<K, V> extends Iterable<Tuple2<K, V>> {
   final Hamt<K, V> hamt;
 
-  FMap() : hamt = Hamt();
+  FMap() : hamt = Hamt<K, V>();
 
   FMap._(this.hamt);
 
   FMap.from(Iterable<Tuple2<K, V>> keyVals)
-      : hamt = Hamt().addAll(keyVals.toList());
+      : hamt = Hamt<K, V>().addAll(keyVals.toList());
 
   bool containsKey(K key) => hamt.contains(key);
 

@@ -218,7 +218,7 @@ class _EmptyLeaf<K, V> extends Hamt<K, V> {
           ? _Leaf(hash, FList.from(dedupKeyVals))
           : _SingleLeaf(hash, dedupKeyVals.first.val1, dedupKeyVals.first.val2);
     } else {
-      return _CompressedNode(0, [])._addAll(shift, keyVals);
+      return _CompressedNode<K, V>(0, [])._addAll(shift, keyVals);
     }
   }
 
