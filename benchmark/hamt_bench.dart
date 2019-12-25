@@ -87,7 +87,7 @@ class AddAllBenchmark extends BenchmarkBase {
   @override
   void run() {
     if (functional) {
-      Hamt().addAll(values.map((val) => Tuple2(val, val)).toList());
+      Hamt().addAll(values.map((val) => FTuple2(val, val)).toList());
     } else {
       Set().addAll(values);
     }

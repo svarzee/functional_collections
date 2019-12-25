@@ -18,7 +18,7 @@ mixin FIterable<T> on Iterable<T> {
 
   FMap<K, V> mapToFMap<K, V>(K keyMapper(T value), V valueMapper(T value)) =>
       FMap.from(
-          this.map((value) => Tuple2(keyMapper(value), valueMapper(value))));
+          this.map((value) => FTuple2(keyMapper(value), valueMapper(value))));
 
   FOption<T> firstOption();
 }
