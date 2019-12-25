@@ -2,7 +2,7 @@ import 'package:functional_collections/functional_collections.dart';
 import 'package:functional_collections/src/option.dart';
 
 mixin FIterable<T> on Iterable<T> {
-  FOption<T> find(bool predicate(T)) =>
+  FOption<T> find(bool Function(T) predicate) =>
       FOption.ofNullable(firstWhere(predicate, orElse: null));
 
   @override
@@ -12,11 +12,12 @@ mixin FIterable<T> on Iterable<T> {
 
   FSet<T> toFSet() => FSet.from(this);
 
-  FList<R> mapToFList<R>(R mapper(T value)) => FList.from(map(mapper));
+  FList<R> mapToFList<R>(R Function(T value) mapper) => FList.from(map(mapper));
 
-  FSet<R> mapToFSet<R>(R mapper(T value)) => FSet.from(map(mapper));
+  FSet<R> mapToFSet<R>(R Function(T value) mapper) => FSet.from(map(mapper));
 
-  FMap<K, V> mapToFMap<K, V>(K keyMapper(T value), V valueMapper(T value)) =>
+  FMap<K, V> mapToFMap<K, V>(
+          K Function(T value) keyMapper, V Function(T value) valueMapper) =>
       FMap.from(map((value) => FTuple2(keyMapper(value), valueMapper(value))));
 
   FOption<T> firstOption();
