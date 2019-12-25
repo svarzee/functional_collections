@@ -13,25 +13,22 @@ abstract class FList<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
   factory FList.of(T item) => _Cons(item, _Nil(), 1);
 
   FList<T> append(T item) =>
-      this.foldRight(FList.of(item), (item, acc) => acc.prepend(item));
+      foldRight(FList.of(item), (item, acc) => acc.prepend(item));
 
-  FList<T> appendAll(FOrdered<T> items) => items
-      .foldLeft(this.reverse(), (acc, item) => acc.prepend(item))
-      .reverse();
+  FList<T> appendAll(FOrdered<T> items) =>
+      items.foldLeft(reverse(), (acc, item) => acc.prepend(item)).reverse();
 
-  FList<T> prepend(T item) => _Cons(item, this, this.length + 1);
+  FList<T> prepend(T item) => _Cons(item, this, length + 1);
 
   FList<T> prependAll(FOrdered<T> items) =>
       items.reverse().foldLeft(this, (acc, item) => acc.prepend(item));
 
   FList<T> tail();
 
-  FList<R> flatMap<R>(FOrdered<R> mapper(T value)) => this
-      .foldLeft(
-          FList<R>(),
-          (FList<R> acc, item) => mapper(item)
-              .foldLeft(acc, (FList<R> acc, item) => acc.prepend(item)))
-      .reverse();
+  FList<R> flatMap<R>(FOrdered<R> mapper(T value)) => foldLeft(
+      FList<R>(),
+      (FList<R> acc, item) => mapper(item)
+          .foldLeft(acc, (FList<R> acc, item) => acc.prepend(item))).reverse();
 
   @override
   FList<T> reverse() =>
@@ -41,12 +38,12 @@ abstract class FList<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
   Iterator<T> get iterator => _FListIterator<T>(this);
 
   @override
-  FList<T> where(bool Function(T item) predicate) => this.foldRight(
+  FList<T> where(bool Function(T item) predicate) => foldRight(
       FList<T>(), (item, acc) => predicate(item) ? acc.prepend(item) : acc);
 
   @override
   FList<R> map<R>(R mapper(T value)) =>
-      this.foldRight(FList<R>(), (item, acc) => acc.prepend(mapper(item)));
+      foldRight(FList<R>(), (item, acc) => acc.prepend(mapper(item)));
 }
 
 class _Nil<T> extends FList<T> {

@@ -12,13 +12,12 @@ mixin FIterable<T> on Iterable<T> {
 
   FSet<T> toFSet() => FSet.from(this);
 
-  FList<R> mapToFList<R>(R mapper(T value)) => FList.from(this.map(mapper));
+  FList<R> mapToFList<R>(R mapper(T value)) => FList.from(map(mapper));
 
-  FSet<R> mapToFSet<R>(R mapper(T value)) => FSet.from(this.map(mapper));
+  FSet<R> mapToFSet<R>(R mapper(T value)) => FSet.from(map(mapper));
 
   FMap<K, V> mapToFMap<K, V>(K keyMapper(T value), V valueMapper(T value)) =>
-      FMap.from(
-          this.map((value) => FTuple2(keyMapper(value), valueMapper(value))));
+      FMap.from(map((value) => FTuple2(keyMapper(value), valueMapper(value))));
 
   FOption<T> firstOption();
 }

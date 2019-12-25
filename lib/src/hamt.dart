@@ -58,15 +58,15 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
   _CompressedNode(this.mask, this.array) : super._();
 
   factory _CompressedNode.ofKeyVals(int shift, FList<FTuple2<K, V>> keyVals) {
-    List<Hamt<K, V>> array = List(keyVals.length);
-    int mask = keyVals.foldLeft(
+    final array = List(keyVals.length);
+    final mask = keyVals.foldLeft(
         0, (mask, keyVal) => mask | _bit(_prefix(keyVal.val1.hashCode, shift)));
-    int progressMask = 0;
+    var progressMask = 0;
     keyVals.forEach((keyVal) {
-      K key = keyVal.val1;
-      V val = keyVal.val2;
-      int prefix = _prefix(keyVal.val1.hashCode, shift);
-      int bit = _bit(prefix);
+      final key = keyVal.val1;
+      final val = keyVal.val2;
+      final prefix = _prefix(keyVal.val1.hashCode, shift);
+      final bit = _bit(prefix);
       if (_exists(bit, progressMask)) {
         int index = _index(mask, prefix);
         array[index] = array[index]._add(shift + _PREFIX_SIZE, key, val);
@@ -237,8 +237,8 @@ class _SingleLeaf<K, V> extends Hamt<K, V> {
 
   Hamt<K, V> _add(int shift, K key, V val) {
     if (key.hashCode == hash) {
-      return _Leaf(
-          hash, FList.of(FTuple2(this.key, this.val)).prepend(FTuple2(key, val)));
+      return _Leaf(hash,
+          FList.of(FTuple2(this.key, this.val)).prepend(FTuple2(key, val)));
     } else {
       return _CompressedNode.ofTwo(
           shift, FTuple2(this.key, this.val), FTuple2(key, val));
