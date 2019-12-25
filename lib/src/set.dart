@@ -20,6 +20,10 @@ class FSet<T> extends Iterable<T> {
   FSet<T> addAll(Iterable<T> values) =>
       FSet._(hamt.addAll(values.map((value) => Tuple2(value, value)).toList()));
 
+  FSet<R> map<R>(R mapper(T value)) => FSet.from(super.map(mapper));
+
+  FSet<T> where(bool test(T value)) => FSet.from(super.where(test));
+
   @override
   Iterator<T> get iterator => hamt.entries().map((item) => item.val1).iterator;
 }

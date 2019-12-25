@@ -290,9 +290,9 @@ class _Leaf<K, V> extends Hamt<K, V> {
   }
 
   Hamt<K, V> _remove(int shift, K key) {
-    final updatedKeyVals = keyVals.filter((keyVal) => keyVal.val1 != key);
+    final updatedKeyVals = keyVals.where((keyVal) => keyVal.val1 != key);
     return updatedKeyVals.length == 1
-        ? _SingleLeaf.of(keyVals.head().val1, keyVals.head().val2)
+        ? _SingleLeaf.of(keyVals.first.val1, keyVals.first.val2)
         : _Leaf(hash, updatedKeyVals);
   }
 

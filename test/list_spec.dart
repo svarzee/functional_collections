@@ -11,7 +11,7 @@ void main() {
   });
 
   test('FList.prepend constructs expected list', () {
-    expect(FList()..prepend(2).prepend(1).dartList(), equals([1, 2]));
+    expect(FList().prepend(2).prepend(1).dartList(), equals([1, 2]));
   });
 
   test('FList.prependAll constructs expected list', () {

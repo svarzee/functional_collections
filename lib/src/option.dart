@@ -17,7 +17,7 @@ abstract class FOption<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
 
   FOption<R> flatMap<R>(FOption<R> mapper(T value));
 
-  FOption<T> headOption() => this;
+  FOption<T> firstOption() => this;
 
   @override
   Iterator<T> get iterator => _FOptionIterator(this);
@@ -114,7 +114,7 @@ class _FOptionIterator<T> extends Iterator<T> {
   _FOptionIterator(this._option);
 
   @override
-  T get current => _current.headOption().getOrElse(null);
+  T get current => _current.firstOption().getOrElse(null);
 
   @override
   bool moveNext() {

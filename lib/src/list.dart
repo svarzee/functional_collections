@@ -32,10 +32,6 @@ abstract class FList<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
     return dartList;
   }
 
-  T head() => headOption().get();
-
-  FOption<T> headOption();
-
   FList<R> flatMap<R>(FOrdered<R> mapper(T value)) => this
       .foldLeft(
           FList<R>(),
@@ -51,7 +47,7 @@ abstract class FList<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
   Iterator<T> get iterator => _FListIterator<T>(this);
 
   @override
-  FList<T> filter(bool Function(T item) predicate) => this.foldRight(
+  FList<T> where(bool Function(T item) predicate) => this.foldRight(
       FList<T>(), (item, acc) => predicate(item) ? acc.prepend(item) : acc);
 
   @override
@@ -66,7 +62,7 @@ class _Nil<T> extends FList<T> {
   int get length => 0;
 
   @override
-  FNone<T> headOption() => FNone<T>();
+  FNone<T> firstOption() => FNone<T>();
 
   @override
   FList<T> tail() => _Nil<T>();
@@ -83,7 +79,7 @@ class _Cons<T> extends FList<T> {
   int get length => _size;
 
   @override
-  FSome<T> headOption() {
+  FSome<T> firstOption() {
     return FSome(_head);
   }
 
@@ -100,7 +96,7 @@ class _FListIterator<T> extends Iterator<T> {
   _FListIterator(this._list);
 
   @override
-  T get current => _current.headOption().getOrElse(null);
+  T get current => _current.firstOption().getOrElse(null);
 
   @override
   bool moveNext() {
