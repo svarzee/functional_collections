@@ -26,12 +26,6 @@ abstract class FList<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
 
   FList<T> tail();
 
-  List<T> dartList() {
-    final dartList = List<T>();
-    this.forEach(dartList.add);
-    return dartList;
-  }
-
   FList<R> flatMap<R>(FOrdered<R> mapper(T value)) => this
       .foldLeft(
           FList<R>(),

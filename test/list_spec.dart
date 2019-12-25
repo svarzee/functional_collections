@@ -11,29 +11,29 @@ void main() {
   });
 
   test('FList.prepend constructs expected list', () {
-    expect(FList().prepend(2).prepend(1).dartList(), equals([1, 2]));
+    expect(FList().prepend(2).prepend(1).toList(), equals([1, 2]));
   });
 
   test('FList.prependAll constructs expected list', () {
-    expect(FList.from([3, 4]).prependAll(FList.from([1, 2])).dartList(),
+    expect(FList.from([3, 4]).prependAll(FList.from([1, 2])).toList(),
         equals([1, 2, 3, 4]));
   });
 
   test('FList.append constructs expected list', () {
-    expect(FList().append(1).append(2).dartList(), equals([1, 2]));
+    expect(FList().append(1).append(2).toList(), equals([1, 2]));
   });
 
   test('FList.appendAll constructs expected list', () {
-    expect(FList.from([1, 2]).appendAll(FList.from([3, 4])).dartList(),
+    expect(FList.from([1, 2]).appendAll(FList.from([3, 4])).toList(),
         equals([1, 2, 3, 4]));
   });
 
   test('FList.from constructs expected list from iterable', () {
-    expect(FList.from([1, 2]).dartList(), equals([1, 2]));
+    expect(FList.from([1, 2]).toList(), equals([1, 2]));
   });
 
   test('FList.map should map list', () {
-    expect(FList.from([1, 2]).map((item) => item.toString()).dartList(),
+    expect(FList.from([1, 2]).map((item) => item.toString()).toList(),
         equals(["1", "2"]));
   });
 
@@ -42,12 +42,12 @@ void main() {
         FList.from([
           FList.from([1, 2]),
           FList.from([3, 4])
-        ]).flatMap((item) => item).dartList(),
+        ]).flatMap((item) => item).toList(),
         equals([1, 2, 3, 4]));
   });
 
   test('FList.reverse should reverse list', () {
-    expect(FList.from([1, 2]).reverse().dartList(), equals([2, 1]));
+    expect(FList.from([1, 2]).reverse().toList(), equals([2, 1]));
   });
 
   test('FList.foldLeft fold list from left to right', () {
