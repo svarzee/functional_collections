@@ -1,3 +1,3 @@
 Description
 ---
-Immutable collections.
+Example.
