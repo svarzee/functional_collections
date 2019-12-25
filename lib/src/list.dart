@@ -25,7 +25,7 @@ abstract class FList<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
 
   FList<T> tail();
 
-  FList<R> flatMap<R>(FOrdered<R> mapper(T value)) => foldLeft(
+  FList<R> flatMap<R>(FOrdered<R> Function(T value) mapper) => foldLeft(
       FList<R>(),
       (FList<R> acc, item) => mapper(item)
           .foldLeft(acc, (FList<R> acc, item) => acc.prepend(item))).reverse();
@@ -42,7 +42,7 @@ abstract class FList<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
       FList<T>(), (item, acc) => predicate(item) ? acc.prepend(item) : acc);
 
   @override
-  FList<R> map<R>(R mapper(T value)) =>
+  FList<R> map<R>(R Function(T value) mapper) =>
       foldRight(FList<R>(), (item, acc) => acc.prepend(mapper(item)));
 }
 
@@ -60,9 +60,9 @@ class _Nil<T> extends FList<T> {
 }
 
 class _Cons<T> extends FList<T> {
-  T _head;
-  FList<T> _tail;
-  int _size;
+  final T _head;
+  final FList<T> _tail;
+  final int _size;
 
   _Cons(this._head, this._tail, this._size) : super._();
 

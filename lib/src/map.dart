@@ -27,15 +27,18 @@ class FMap<K, V> extends Iterable<FTuple2<K, V>> {
   @override
   Iterator<FTuple2<K, V>> get iterator => hamt.entries().iterator;
 
-  FList<R> map<R>(R mapper(FTuple2<K, V> value)) => entries().map(mapper);
+  @override
+  FList<R> map<R>(R Function(FTuple2<K, V> value) mapper) =>
+      entries().map(mapper);
 
-  FMap<RK, RV> mapEntries<RK, RV>(FTuple2<RK, RV> mapper(FTuple2<K, V> value)) =>
+  FMap<RK, RV> mapEntries<RK, RV>(
+          FTuple2<RK, RV> Function(FTuple2<K, V> value) mapper) =>
       FMap.from(entries().map(mapper));
 
-  FMap<RK, V> mapKeys<RK>(RK mapper(K value)) => FMap.from(
+  FMap<RK, V> mapKeys<RK>(RK Function(K value) mapper) => FMap.from(
       entries().map((keyVal) => FTuple2(mapper(keyVal.val1), keyVal.val2)));
 
-  FMap<K, RV> mapValues<RV>(RV mapper(V value)) => FMap.from(
+  FMap<K, RV> mapValues<RV>(RV Function(V value) mapper) => FMap.from(
       entries().map((keyVal) => FTuple2(keyVal.val1, mapper(keyVal.val2))));
 
   FList<FTuple2<K, V>> entries() => hamt.entries();

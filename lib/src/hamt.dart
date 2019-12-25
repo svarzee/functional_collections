@@ -124,8 +124,8 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
     if (keyVals.isEmpty) {
       return this;
     } else {
-      int mask = this.mask;
-      List<Hamt<K, V>> array = List.of(this.array);
+      var mask = this.mask;
+      final array = List.of(this.array);
       keyVals.forEach((keyVal) {
         final hash = keyVal.val1.hashCode;
         final prefix = _prefix(hash, shift);
@@ -144,6 +144,7 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
     }
   }
 
+  @override
   Hamt<K, V> _remove(int shift, K key) {
     final prefix = _prefix(key.hashCode, shift);
     final bit = _bit(prefix);
@@ -162,6 +163,7 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
     }
   }
 
+  @override
   bool _contains(int shift, K key) {
     final prefix = _prefix(key.hashCode, shift);
     final bit = _bit(prefix);
@@ -173,6 +175,7 @@ class _CompressedNode<K, V> extends Hamt<K, V> {
     }
   }
 
+  @override
   FOption<V> _get(int shift, K key) {
     final prefix = _prefix(key.hashCode, shift);
     final bit = _bit(prefix);
