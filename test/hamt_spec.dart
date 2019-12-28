@@ -17,17 +17,52 @@ void main() {
 
   test('Key added twice is should be contained once', () {
     expect(
-        Hamt().add("some", "value1").add("some", "value2").entries().toList(),
+        Hamt<String, String>()
+            .add("some", "value1")
+            .add("some", "value2")
+            .entries()
+            .toList(),
         [FTuple2("some", "value2")]);
+  });
+
+  test('Key added twice to existing hash should be contained once', () {
+    expect(
+        Hamt<FixedHash, String>()
+            .add(FixedHash("some"), "value1")
+            .add(FixedHash("some-other"), "value2")
+            .add(FixedHash("some-other"), "value3")
+            .entries()
+            .toList(),
+        [
+          FTuple2(FixedHash("some-other"), "value3"),
+          FTuple2(FixedHash("some"), "value1")
+        ]);
   });
 
   test('Key added with addAll twice is should be contained once', () {
     expect(
-        Hamt()
+        Hamt<String, String>()
             .addAll([FTuple2("some", "value1"), FTuple2("some", "value2")])
             .entries()
             .toList(),
         [FTuple2("some", "value2")]);
+  });
+
+  test('Key added twice to existing hash with addAll should be contained once',
+      () {
+    expect(
+        Hamt<FixedHash, String>()
+            .addAll([
+              FTuple2(FixedHash("some"), "value1"),
+              FTuple2(FixedHash("some-other"), "value2"),
+              FTuple2(FixedHash("some-other"), "value3")
+            ])
+            .entries()
+            .toList(),
+        [
+          FTuple2(FixedHash("some-other"), "value3"),
+          FTuple2(FixedHash("some"), "value1")
+        ]);
   });
 
   test('Keys that are added to hamt with addAll should be contained', () {
@@ -123,4 +158,23 @@ void main() {
     expect(allValues.map((funSet.contains)).toList(),
         allValues.map((dartSet.contains)).toList());
   });
+}
+
+class FixedHash {
+  String key;
+
+  FixedHash(this.key);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FixedHash &&
+          runtimeType == other.runtimeType &&
+          key == other.key;
+
+  @override
+  int get hashCode => 0;
+
+  @override
+  String toString() => key;
 }

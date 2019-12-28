@@ -46,6 +46,10 @@ abstract class FList<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
       foldRight(FList<R>(), (item, acc) => acc.prepend(mapper(item)));
 
   @override
+  FList<T> replace(T value, T replacement) =>
+      map((item) => item == value ? replacement : item);
+
+  @override
   String toString() => '[' + join(", ") + ']';
 }
 

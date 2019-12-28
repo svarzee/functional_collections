@@ -59,4 +59,9 @@ void main() {
     expect(FList.from(['a', 'b']).foldRight('', (item, acc) => acc + item),
         equals('ba'));
   });
+
+  test('FList.replace should replace', () {
+    expect(FList.from(['a', 'b', 'a']).replace('a', 'c'),
+        FList.from(['c', 'b', 'c']));
+  });
 }
