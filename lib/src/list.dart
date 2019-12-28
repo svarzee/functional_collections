@@ -44,6 +44,9 @@ abstract class FList<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
   @override
   FList<R> map<R>(R Function(T value) mapper) =>
       foldRight(FList<R>(), (item, acc) => acc.prepend(mapper(item)));
+
+  @override
+  String toString() => '[' + join(", ") + ']';
 }
 
 class _Nil<T> extends FList<T> {

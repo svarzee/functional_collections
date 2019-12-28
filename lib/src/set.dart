@@ -28,4 +28,7 @@ class FSet<T> extends Iterable<T> {
 
   @override
   Iterator<T> get iterator => hamt.entries().map((item) => item.val1).iterator;
+
+  @override
+  String toString() => '{' + join(', ') + '}';
 }

@@ -22,7 +22,5 @@ class FTuple2<T1, T2> {
       FTuple2(val1, mapper(val2));
 
   @override
-  String toString() {
-    return 'FTuple2{val1: $val1, val2: $val2}';
-  }
+  String toString() => 'FTuple2($val1, $val2)';
 }

@@ -46,4 +46,8 @@ class FMap<K, V> extends Iterable<FTuple2<K, V>> {
   FList<K> keys() => hamt.entries().map((item) => item.val1);
 
   FList<V> values() => hamt.entries().map((item) => item.val2);
+
+  @override
+  String toString() =>
+      '{' + map((entry) => '${entry.val1}:${entry.val2}').join(', ') + '}';
 }
