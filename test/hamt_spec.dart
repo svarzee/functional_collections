@@ -15,8 +15,24 @@ void main() {
     expect(Hamt().add("some", "value").contains("some"), isTrue);
   });
 
+  test('Key added twice is should be contained once', () {
+    expect(
+        Hamt().add("some", "value1").add("some", "value2").entries().toList(),
+        [FTuple2("some", "value2")]);
+  });
+
+  test('Key added with addAll twice is should be contained once', () {
+    expect(
+        Hamt()
+            .addAll([FTuple2("some", "value1"), FTuple2("some", "value2")])
+            .entries()
+            .toList(),
+        [FTuple2("some", "value2")]);
+  });
+
   test('Keys that are added to hamt with addAll should be contained', () {
-    var hamt = Hamt().addAll([FTuple2("key1", "val1"), FTuple2("key2", "val2")]);
+    var hamt =
+        Hamt().addAll([FTuple2("key1", "val1"), FTuple2("key2", "val2")]);
     expect(hamt.contains("key1") && hamt.contains("key2"), isTrue);
   });
 
@@ -107,20 +123,4 @@ void main() {
     expect(allValues.map((funSet.contains)).toList(),
         allValues.map((dartSet.contains)).toList());
   });
-}
-
-class KeyWithSameHash {
-  String key;
-
-  KeyWithSameHash(this.key);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is KeyWithSameHash &&
-          runtimeType == other.runtimeType &&
-          key == other.key;
-
-  @override
-  int get hashCode => 0;
 }
