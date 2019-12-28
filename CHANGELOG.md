@@ -1,3 +1,6 @@
+## 0.1.9
+* Fix reccuring keys for hamt
+
 ## 0.1.8
 * Refactor
 
