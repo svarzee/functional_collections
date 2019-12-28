@@ -227,7 +227,7 @@ class _EmptyLeaf<K, V> extends Hamt<K, V> {
       return _SingleLeaf<K, V>(key.hashCode, key, val);
     } else if (keyVals
         .every((keyVal) => keyVal.key.hashCode == keyVals.first.key.hashCode)) {
-      final dedupKeyVals = Set<_KeyVal<K, V>>()..addAll(keyVals.reversed);
+      final dedupKeyVals = keyVals.reversed.toSet();
       final hash = keyVals.first.key.hashCode;
       return dedupKeyVals.length > 1
           ? _Leaf(hash, FList.from(dedupKeyVals))
@@ -280,8 +280,8 @@ class _SingleLeaf<K, V> extends Hamt<K, V> {
     if (keyVals.isEmpty) {
       return this;
     } else if (keyVals.every((keyVal) => keyVal.key.hashCode == hash)) {
-      final dedupKeyVals = (Set<_KeyVal<K, V>>.from([(_KeyVal<K, V>(key, val))])
-        ..addAll(keyVals.reversed));
+      final dedupKeyVals = {(_KeyVal<K, V>(key, val))}
+        ..addAll(keyVals.reversed);
       return dedupKeyVals.length > 1
           ? _Leaf(hash, FList.from(dedupKeyVals))
           : this;
