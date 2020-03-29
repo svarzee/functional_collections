@@ -9,8 +9,10 @@ class FMap<K, V> extends Iterable<FTuple2<K, V>> {
 
   FMap._(this.hamt);
 
-  FMap.from(Iterable<FTuple2<K, V>> keyVals)
-      : hamt = Hamt<K, V>().addAll(keyVals.toList());
+  FMap.from(Iterable<FTuple2<K, V>> keyVals) : hamt = Hamt<K, V>().addAll(keyVals.toList());
+
+  @override
+  int get length => hamt.size();
 
   bool containsKey(K key) => hamt.contains(key);
 
@@ -18,28 +20,24 @@ class FMap<K, V> extends Iterable<FTuple2<K, V>> {
 
   FMap<K, V> remove(K key) => FMap._(hamt.remove(key));
 
-  FMap<K, V> add(FTuple2<K, V> keyVal) =>
-      FMap._(hamt.add(keyVal.val1, keyVal.val2));
+  FMap<K, V> add(FTuple2<K, V> keyVal) => FMap._(hamt.add(keyVal.val1, keyVal.val2));
 
-  FMap<K, V> addAll(Iterable<FTuple2<K, V>> keyVals) =>
-      FMap._(hamt.addAll(keyVals));
+  FMap<K, V> addAll(Iterable<FTuple2<K, V>> keyVals) => FMap._(hamt.addAll(keyVals));
 
   @override
   Iterator<FTuple2<K, V>> get iterator => hamt.entries().iterator;
 
   @override
-  FList<R> map<R>(R Function(FTuple2<K, V> value) mapper) =>
-      entries().map(mapper);
+  FList<R> map<R>(R Function(FTuple2<K, V> value) mapper) => entries().map(mapper);
 
-  FMap<RK, RV> mapEntries<RK, RV>(
-          FTuple2<RK, RV> Function(FTuple2<K, V> value) mapper) =>
+  FMap<RK, RV> mapEntries<RK, RV>(FTuple2<RK, RV> Function(FTuple2<K, V> value) mapper) =>
       FMap.from(entries().map(mapper));
 
-  FMap<RK, V> mapKeys<RK>(RK Function(K value) mapper) => FMap.from(
-      entries().map((keyVal) => FTuple2(mapper(keyVal.val1), keyVal.val2)));
+  FMap<RK, V> mapKeys<RK>(RK Function(K value) mapper) =>
+      FMap.from(entries().map((keyVal) => FTuple2(mapper(keyVal.val1), keyVal.val2)));
 
-  FMap<K, RV> mapValues<RV>(RV Function(V value) mapper) => FMap.from(
-      entries().map((keyVal) => FTuple2(keyVal.val1, mapper(keyVal.val2))));
+  FMap<K, RV> mapValues<RV>(RV Function(V value) mapper) =>
+      FMap.from(entries().map((keyVal) => FTuple2(keyVal.val1, mapper(keyVal.val2))));
 
   FList<FTuple2<K, V>> entries() => hamt.entries();
 
@@ -48,6 +46,5 @@ class FMap<K, V> extends Iterable<FTuple2<K, V>> {
   FList<V> values() => hamt.entries().map((item) => item.val2);
 
   @override
-  String toString() =>
-      '{' + map((entry) => '${entry.val1}:${entry.val2}').join(', ') + '}';
+  String toString() => '{' + map((entry) => '${entry.val1}:${entry.val2}').join(', ') + '}';
 }

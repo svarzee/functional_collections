@@ -8,17 +8,17 @@ class FSet<T> extends Iterable<T> {
 
   FSet._(Hamt<T, T> hamt) : hamt = hamt;
 
-  FSet.from(Iterable<T> keyVals)
-      : hamt = Hamt<T, T>()
-            .addAll(keyVals.map((value) => FTuple2(value, value)).toList());
+  FSet.from(Iterable<T> keyVals) : hamt = Hamt<T, T>().addAll(keyVals.map((value) => FTuple2(value, value)).toList());
+
+  @override
+  int get length => hamt.size();
 
   @override
   bool contains(Object value) => hamt.contains(value);
 
   FSet<T> add(T value) => FSet._(hamt.add(value, value));
 
-  FSet<T> addAll(Iterable<T> values) => FSet._(
-      hamt.addAll(values.map((value) => FTuple2(value, value)).toList()));
+  FSet<T> addAll(Iterable<T> values) => FSet._(hamt.addAll(values.map((value) => FTuple2(value, value)).toList()));
 
   @override
   FSet<R> map<R>(R Function(T value) mapper) => FSet.from(super.map(mapper));
