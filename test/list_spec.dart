@@ -2,6 +2,14 @@ import 'package:functional_collections/src/list.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('FList.length for empty', () {
+    expect(FList().length, 0);
+  });
+
+  test('FList.length for non-empty', () {
+    expect(FList().prepend(1).prepend(2).length, 2);
+  });
+
   test('FList.isEmpty for empty', () {
     expect(FList().isEmpty, isTrue);
   });
