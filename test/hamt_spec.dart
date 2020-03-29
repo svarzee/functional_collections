@@ -16,12 +16,7 @@ void main() {
   });
 
   test('Key added twice is should be contained once', () {
-    expect(
-        Hamt<String, String>()
-            .add("some", "value1")
-            .add("some", "value2")
-            .entries()
-            .toList(),
+    expect(Hamt<String, String>().add("some", "value1").add("some", "value2").entries().toList(),
         [FTuple2("some", "value2")]);
   });
 
@@ -33,23 +28,15 @@ void main() {
             .add(FixedHash("some-other"), "value3")
             .entries()
             .toList(),
-        [
-          FTuple2(FixedHash("some-other"), "value3"),
-          FTuple2(FixedHash("some"), "value1")
-        ]);
+        [FTuple2(FixedHash("some-other"), "value3"), FTuple2(FixedHash("some"), "value1")]);
   });
 
   test('Key added with addAll twice is should be contained once', () {
-    expect(
-        Hamt<String, String>()
-            .addAll([FTuple2("some", "value1"), FTuple2("some", "value2")])
-            .entries()
-            .toList(),
+    expect(Hamt<String, String>().addAll([FTuple2("some", "value1"), FTuple2("some", "value2")]).entries().toList(),
         [FTuple2("some", "value2")]);
   });
 
-  test('Key added twice to existing hash with addAll should be contained once',
-      () {
+  test('Key added twice to existing hash with addAll should be contained once', () {
     expect(
         Hamt<FixedHash, String>()
             .addAll([
@@ -59,76 +46,49 @@ void main() {
             ])
             .entries()
             .toList(),
-        [
-          FTuple2(FixedHash("some-other"), "value3"),
-          FTuple2(FixedHash("some"), "value1")
-        ]);
+        [FTuple2(FixedHash("some-other"), "value3"), FTuple2(FixedHash("some"), "value1")]);
   });
 
   test('Keys that are added to hamt with addAll should be contained', () {
-    var hamt =
-        Hamt().addAll([FTuple2("key1", "val1"), FTuple2("key2", "val2")]);
+    var hamt = Hamt().addAll([FTuple2("key1", "val1"), FTuple2("key2", "val2")]);
     expect(hamt.contains("key1") && hamt.contains("key2"), isTrue);
   });
 
-  test(
-      'Keys that are added to hamt with addAll and removed should not be contained',
-      () {
-    var hamt = Hamt().addAll(
-        [FTuple2("key1", "val1"), FTuple2("key2", "val2")]).remove("key1");
+  test('Keys that are added to hamt with addAll and removed should not be contained', () {
+    var hamt = Hamt().addAll([FTuple2("key1", "val1"), FTuple2("key2", "val2")]).remove("key1");
     expect(!hamt.contains("key1") && hamt.contains("key2"), isTrue);
   });
 
-  test(
-      'Duplicate keys that are added to hamt with addAll and removed should not be contained',
-      () {
-    var hamt = Hamt().addAll([
-      FTuple2("key1", "val1"),
-      FTuple2("key1", "val1"),
-      FTuple2("key2", "val2")
-    ]).remove("key1");
+  test('Duplicate keys that are added to hamt with addAll and removed should not be contained', () {
+    var hamt =
+        Hamt().addAll([FTuple2("key1", "val1"), FTuple2("key1", "val1"), FTuple2("key2", "val2")]).remove("key1");
     expect(!hamt.contains("key1") && hamt.contains("key2"), isTrue);
   });
 
   test('Value that is added to hamt should be contained', () {
-    expect(Hamt<String, String>().add("some", "value").get("some"),
-        FSome("value"));
+    expect(Hamt<String, String>().add("some", "value").get("some"), FSome("value"));
   });
 
   test('Key that is added and removed should not be contained', () {
-    expect(
-        Hamt().add("some", "value").remove("some").contains("some"), isFalse);
+    expect(Hamt().add("some", "value").remove("some").contains("some"), isFalse);
   });
 
   test('Key that is added twice and removed should not be contained', () {
-    expect(
-        Hamt()
-            .add("some", "value")
-            .add("some", "value")
-            .remove("some")
-            .contains("some"),
-        isFalse);
+    expect(Hamt().add("some", "value").add("some", "value").remove("some").contains("some"), isFalse);
   });
 
-  test('For two values added with the same key, the later should be contained.',
-      () {
+  test('For two values added with the same key, the later should be contained.', () {
     expect(
-        Hamt<String, String>()
-            .add("some", "value")
-            .add("some", "another value")
-            .get("some"),
-        FSome("another value"));
+        Hamt<String, String>().add("some", "value").add("some", "another value").get("some"), FSome("another value"));
   });
 
-  test(
-      'For two different keys with the same hashcode both should be contained.',
-      () {
+  test('For two different keys with the same hashcode both should be contained.', () {
     expect(
-        Hamt<String, String>()
-            .add("some", "value")
-            .add("some", "another value")
-            .get("some"),
-        FSome("another value"));
+        Hamt<FixedHash, String>()
+            .add(FixedHash("some"), "value")
+            .add(FixedHash("some-other"), "another value")
+            .get(FixedHash(("some"))),
+        FSome("value"));
   });
 
   test('Shoud have results equal to dart set.', () {
@@ -141,8 +101,7 @@ void main() {
     final moreValues = List<int>.generate(N, (idx) => random.nextInt(1 << 32));
     final allValues = values..addAll(moreValues);
 
-    expect(allValues.map((funSet.contains)).toList(),
-        allValues.map((dartSet.contains)).toList());
+    expect(allValues.map((funSet.contains)).toList(), allValues.map((dartSet.contains)).toList());
   });
 
   test('Shoud have results equal to dart set (for a lot of data).', () {
@@ -155,8 +114,7 @@ void main() {
     final moreValues = List<int>.generate(N, (idx) => random.nextInt(1 << 32));
     final allValues = values..addAll(moreValues);
 
-    expect(allValues.map((funSet.contains)).toList(),
-        allValues.map((dartSet.contains)).toList());
+    expect(allValues.map((funSet.contains)).toList(), allValues.map((dartSet.contains)).toList());
   });
 }
 
@@ -167,10 +125,7 @@ class FixedHash {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FixedHash &&
-          runtimeType == other.runtimeType &&
-          key == other.key;
+      identical(this, other) || other is FixedHash && runtimeType == other.runtimeType && key == other.key;
 
   @override
   int get hashCode => 0;
