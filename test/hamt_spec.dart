@@ -7,11 +7,11 @@ import 'package:functional_collections/src/tuple.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('FList.length for empty', () {
+  test('Hamt.size for empty', () {
     expect(Hamt().size(), 0);
   });
 
-  test('FList.length for non-empty', () {
+  test('Hamt.size for non-empty', () {
     expect(Hamt().add("a", 1).add("b", 2).add("b", 3).size(), 2);
   });
 

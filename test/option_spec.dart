@@ -1,7 +1,15 @@
-import 'package:test/test.dart';
 import 'package:functional_collections/src/option.dart';
+import 'package:test/test.dart';
 
 void main() {
+  test('None.length for empty', () {
+    expect(FNone().length, 0);
+  });
+
+  test('Some.length for non-empty', () {
+    expect(FSome("x").length, 1);
+  });
+
   test('None.get throws NoValuePresentError', () {
     expect(() => FNone().get(), throwsA(FNoValuePresentError()));
   });
