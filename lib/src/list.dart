@@ -7,49 +7,58 @@ abstract class FList<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
 
   factory FList() => _Nil<T>();
 
-  factory FList.from(Iterable<T> iterable) =>
-      iterable.fold(FList<T>(), (acc, item) => acc.prepend(item)).reverse();
+  factory FList.from(Iterable<T> iterable) => iterable.fold(FList<T>(), (acc, item) => acc.prepend(item)).reverse();
 
   factory FList.of(T item) => _Cons(item, _Nil(), 1);
 
-  FList<T> append(T item) =>
-      foldRight(FList.of(item), (item, acc) => acc.prepend(item));
+  FList<T> append(T item) => foldRight(FList.of(item), (item, acc) => acc.prepend(item));
 
-  FList<T> appendAll(FOrdered<T> items) =>
-      items.foldLeft(reverse(), (acc, item) => acc.prepend(item)).reverse();
+  FList<T> appendAll(FOrdered<T> items) => items.foldLeft(reverse(), (acc, item) => acc.prepend(item)).reverse();
 
   FList<T> prepend(T item) => _Cons(item, this, length + 1);
 
-  FList<T> prependAll(FOrdered<T> items) =>
-      items.reverse().foldLeft(this, (acc, item) => acc.prepend(item));
+  FList<T> prependAll(FOrdered<T> items) => items.reverse().foldLeft(this, (acc, item) => acc.prepend(item));
 
   FList<T> tail();
 
   FList<R> flatMap<R>(FOrdered<R> Function(T value) mapper) => foldLeft(
-      FList<R>(),
-      (FList<R> acc, item) => mapper(item)
-          .foldLeft(acc, (FList<R> acc, item) => acc.prepend(item))).reverse();
+          FList<R>(), (FList<R> acc, item) => mapper(item).foldLeft(acc, (FList<R> acc, item) => acc.prepend(item)))
+      .reverse();
 
   @override
-  FList<T> reverse() =>
-      length <= 1 ? this : foldLeft(FList(), (acc, item) => acc.prepend(item));
+  FList<T> reverse() => length <= 1 ? this : foldLeft(FList(), (acc, item) => acc.prepend(item));
 
   @override
   Iterator<T> get iterator => _FListIterator<T>(this);
 
   @override
-  FList<T> where(bool Function(T item) predicate) => foldRight(
-      FList<T>(), (item, acc) => predicate(item) ? acc.prepend(item) : acc);
+  FList<T> where(bool Function(T item) predicate) =>
+      foldRight(FList<T>(), (item, acc) => predicate(item) ? acc.prepend(item) : acc);
 
   @override
-  FList<R> map<R>(R Function(T value) mapper) =>
-      foldRight(FList<R>(), (item, acc) => acc.prepend(mapper(item)));
+  FList<R> map<R>(R Function(T value) mapper) => foldRight(FList<R>(), (item, acc) => acc.prepend(mapper(item)));
 
-  FList<T> replace(T value, T replacement) =>
-      map((item) => item == value ? replacement : item);
+  FList<T> replace(T value, T replacement) => map((item) => item == value ? replacement : item);
 
   @override
   String toString() => '[' + join(', ') + ']';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    } else if (other is FList && runtimeType == other.runtimeType && length == other.length) {
+      final left = iterator;
+      final right = other.iterator;
+      while (left.moveNext() && right.moveNext()) if (left.current != right.current) return false;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  int get hashCode => fold(0, (previousValue, element) => previousValue + element.hashCode);
 }
 
 class _Nil<T> extends FList<T> {
