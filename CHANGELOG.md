@@ -1,3 +1,6 @@
+## 0.2.0
+* Implement == for FList 
+
 ## 0.1.10
 * Refactor
 
