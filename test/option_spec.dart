@@ -29,4 +29,28 @@ void main() {
   test('Some should flatMap value', () {
     expect(FSome(1).flatMap((v) => FNone()), equals(FNone()));
   });
+
+  test('FNone.== for equal', () {
+    expect(FNone() == FNone(), isTrue);
+  });
+
+  test('FSome.== for equal', () {
+    expect(FSome('a') == FSome('a'), isTrue);
+  });
+
+  test('FSome.== for not equal', () {
+    expect(FSome('a') == FSome('b'), isFalse);
+  });
+
+  test('FOption.== for not equal', () {
+    expect(FSome('a') == FNone(), isFalse);
+  });
+
+  test('FOption.hashCode for equal', () {
+    expect(FSome('a').hashCode == FSome('a').hashCode, isTrue);
+  });
+
+  test('FOption.hashCode for not equal', () {
+    expect(FSome('a').hashCode == FSome('b').hashCode, isFalse);
+  });
 }

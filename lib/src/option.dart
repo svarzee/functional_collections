@@ -25,6 +25,13 @@ abstract class FOption<T> extends Iterable<T> with FIterable<T>, FOrdered<T> {
 
   @override
   FOption<T> reverse() => this;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is FOption && runtimeType == other.runtimeType && get() == other.get();
+
+  @override
+  int get hashCode => map((value) => value.hashCode).getOrElse(0);
 }
 
 class FSome<T> extends FOption<T> {
@@ -34,10 +41,7 @@ class FSome<T> extends FOption<T> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FSome &&
-          runtimeType == other.runtimeType &&
-          _value == other._value;
+      identical(this, other) || other is FSome && runtimeType == other.runtimeType && _value == other._value;
 
   @override
   int get hashCode => _value.hashCode;
@@ -58,8 +62,7 @@ class FSome<T> extends FOption<T> {
   T getOrElse(T value) => _value;
 
   @override
-  FOption<T> where(bool Function(T item) predicate) =>
-      predicate(_value) ? this : FNone<T>();
+  FOption<T> where(bool Function(T item) predicate) => predicate(_value) ? this : FNone<T>();
 
   @override
   FOption<T> orElse(T value) => this;
@@ -72,9 +75,7 @@ class FNone<T> extends FOption<T> {
   FNone() : super._();
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FNone && runtimeType == other.runtimeType;
+  bool operator ==(Object other) => identical(this, other) || other is FNone && runtimeType == other.runtimeType;
 
   @override
   int get hashCode => 0;
@@ -124,8 +125,7 @@ class _FOptionIterator<T> extends Iterator<T> {
 class FNoValuePresentError extends Error {
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FNoValuePresentError && runtimeType == other.runtimeType;
+      identical(this, other) || other is FNoValuePresentError && runtimeType == other.runtimeType;
 
   @override
   int get hashCode => 0;
