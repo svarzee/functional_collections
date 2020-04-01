@@ -1,3 +1,4 @@
+import 'package:functional_collections/functional_collections.dart';
 import 'package:functional_collections/src/hamt.dart';
 import 'package:functional_collections/src/list.dart';
 import 'package:functional_collections/src/tuple.dart';
@@ -15,6 +16,12 @@ class FMap<K, V> extends Iterable<FTuple2<K, V>> {
   int get length => hamt.size();
 
   bool containsKey(K key) => hamt.contains(key);
+
+  FOption<V> get(K key) => hamt.get(key);
+
+  V getOrElse(K key, V orElse) => hamt.get(key).getOrElse(orElse);
+
+  V getOrThrow(K key) => hamt.get(key).get();
 
   FMap<K, V> put(K key, V value) => FMap._(hamt.add(key, value));
 

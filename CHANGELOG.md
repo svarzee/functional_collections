@@ -1,3 +1,6 @@
+## 0.3.0
+* Add get method to FMap 
+
 ## 0.2.0
 * Implement == for FList 
 
